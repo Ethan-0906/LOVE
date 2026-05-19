@@ -9,75 +9,69 @@
 body {
     margin:0;
     overflow:hidden;
-    font-family:"微软雅黑";
-    text-align:center;
-    color:white;
     background:linear-gradient(135deg,#ff6b81,#ff9ff3,#c44569);
+    font-family:"微软雅黑";
+    color:#fff;
+    text-align:center;
 }
 
-/* 信封 */
-#envelope {
+#envelope{
     position:absolute;
     top:40%;
     left:50%;
     transform:translate(-50%,-50%);
     background:#ff4d6d;
     padding:20px 40px;
-    border-radius:12px;
+    border-radius:15px;
     cursor:pointer;
-    font-size:20px;
     animation:pulse 1.5s infinite;
 }
-
-@keyframes pulse {
+@keyframes pulse{
     0%{transform:translate(-50%,-50%) scale(1);}
     50%{transform:translate(-50%,-50%) scale(1.1);}
     100%{transform:translate(-50%,-50%) scale(1);}
 }
 
-/* 内容 */
-#main {
-    display:none;
-    margin-top:20vh;
-}
+#main{display:none;margin-top:15vh;}
 
-/* 名字特效 */
-.names {
+.names{
     font-size:30px;
-    margin-bottom:20px;
-    animation: glow 2s infinite alternate;
+    animation:glow 2s infinite alternate;
 }
-@keyframes glow {
-    from {text-shadow:0 0 10px #fff;}
-    to {text-shadow:0 0 30px #ff4d6d;}
+@keyframes glow{
+    from{text-shadow:0 0 10px #fff;}
+    to{text-shadow:0 0 30px #ff4d6d;}
 }
 
-/* 爱心 */
-.heart {
+#days{margin-top:10px;}
+
+img{
+    width:220px;
+    border-radius:15px;
+    margin-top:15px;
+}
+
+.heart{
     position:absolute;
     color:red;
-    animation: float 6s linear infinite;
+    animation:float 6s linear infinite;
 }
-@keyframes float {
-    from {transform:translateY(0);opacity:1;}
-    to {transform:translateY(-800px);opacity:0;}
-}
-
-/* 打字 */
-#text {
-    font-size:20px;
-    padding:0 20px;
+@keyframes float{
+    from{transform:translateY(0);opacity:1;}
+    to{transform:translateY(-800px);opacity:0;}
 }
 </style>
 </head>
 
 <body>
 
-<div id="envelope">💌 罗娜，点这里</div>
+<div id="envelope">💌 罗娜，点我有惊喜</div>
 
 <div id="main">
     <div class="names">罗豪 ❤️ 罗娜</div>
+    <div id="days"></div>
     <div id="text"></div>
+    <img id="photo" src="">
 </div>
 
 <audio id="music" loop>
@@ -86,19 +80,29 @@ body {
 
 <script>
 
-/* 打开信封 */
+/* 💌 打开信封 */
 document.getElementById("envelope").onclick = function(){
     this.style.display="none";
     document.getElementById("main").style.display="block";
-
     document.getElementById("music").play();
-
     typing();
-    hearts();
+    createHearts();
+    startPhotos();
+    calcDays();
 }
 
-/* 打字表白 */
-const msg = "罗娜 ❤️ 520节日快乐！从遇见你开始，我日历上的普通日子，就悄悄的变成了花期。即见君子，云胡不喜。剩下的日子我陪你一起走";
+/* ❤️ 恋爱天数（自己改开始日期） */
+function calcDays(){
+    let start = new Date("2025-11-21");  // ⚠️ 改成你们在一起日期
+    let now = new Date();
+    let diff = now - start;
+    let days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    document.getElementById("days").innerHTML =
+        "❤️ 我们已经在一起 " + days + " 天 ❤️";
+}
+
+/* ✨ 打字表白 */
+const msg = "罗娜 ❤️ 520节日快乐！遇见你，我日历上普通的日子，就悄悄变成了花期。即见君子，云胡不喜。剩下的日子我陪你一起走";
 let i=0;
 function typing(){
     if(i<msg.length){
@@ -108,15 +112,30 @@ function typing(){
     }
 }
 
-/* 爱心特效 */
-function hearts(){
+/* 📸 照片轮播（换成你的照片） */
+const photos = [
+    "https://picsum.photos/300?1",
+    "https://picsum.photos/300?2",
+    "https://picsum.photos/300?3"
+];
+
+let index=0;
+function startPhotos(){
+    document.getElementById("photo").src=photos[0];
+    setInterval(()=>{
+        index=(index+1)%photos.length;
+        document.getElementById("photo").src=photos[index];
+    },2000);
+}
+
+/* 💖 爱心 */
+function createHearts(){
     setInterval(()=>{
         let h=document.createElement("div");
         h.className="heart";
         h.innerHTML="❤️";
         h.style.left=Math.random()*window.innerWidth+"px";
         h.style.top=window.innerHeight+"px";
-        h.style.fontSize=(Math.random()*20+20)+"px";
         document.body.appendChild(h);
         setTimeout(()=>h.remove(),6000);
     },300);
@@ -126,9 +145,7 @@ function hearts(){
 document.addEventListener("WeixinJSBridgeReady", function () {
     document.getElementById("music").play();
 });
-
 </script>
 
 </body>
 </html>
-``
