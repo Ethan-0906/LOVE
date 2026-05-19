@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title> ❤️ 罗娜</title>
+<title>罗豪 ❤️ 罗娜</title>
 
 <style>
 body{
@@ -27,6 +27,7 @@ body{
     cursor:pointer;
     animation:pulse 1.5s infinite;
 }
+
 @keyframes pulse{
     50%{transform:translate(-50%,-50%) scale(1.1);}
 }
@@ -41,6 +42,12 @@ body{
 .names{
     font-size:28px;
     margin-bottom:10px;
+    animation: glow 2s infinite alternate;
+}
+
+@keyframes glow{
+    from{text-shadow:0 0 10px #fff;}
+    to{text-shadow:0 0 30px #ff4d6d;}
 }
 
 /* 地图 */
@@ -54,6 +61,7 @@ img{
     width:240px;
     border-radius:15px;
     margin-top:10px;
+    box-shadow:0 0 15px rgba(255,255,255,0.5);
 }
 
 /* 回忆文字 */
@@ -62,12 +70,13 @@ img{
     font-size:16px;
 }
 
-/* 爱心漂浮 */
+/* 爱心 */
 .heart{
     position:absolute;
     color:red;
     animation:float 6s linear infinite;
 }
+
 @keyframes float{
     from{transform:translateY(0);opacity:1;}
     to{transform:translateY(-800px);opacity:0;}
@@ -81,52 +90,64 @@ img{
 
 <div id="main">
     <div class="names">罗豪 ❤️ 罗娜</div>
+
     <div id="days"></div>
 
     <canvas id="heartCanvas"></canvas>
 
     <div id="map">
-        📍 吃串串（开启） ➝ 干烧烤（11.21第一次吻你） ➝ 都江堰（第一次出去耍） ➝ 未来的路陪着你 ❤️
+        📍 吃串串 ➝ 干烧烤（第一次吻你） ➝ 都江堰（第一次旅行） ➝ 未来一路有你 ❤️
     </div>
 
     <img id="photo">
     <div id="story"></div>
 </div>
 
-<audio id="music" loop>
-    https://www.w3schools.com/html/horse.mp3
+<!-- 🎵 浪漫BGM -->
+<audio id="music" loop preload="auto">
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3c6fd4c3a4.mp3" type="audio/mpeg">
 </audio>
 
 <script>
 
-/* 打开 */
+/* ✅ 音乐控制 */
+let music = document.getElementById("music");
+
+function playMusic(){
+    music.play().catch(()=>{});
+    music.volume = 0.2;
+    setTimeout(()=>{music.volume = 0.6;},3000);
+}
+
+/* 💌 打开 */
 document.getElementById("envelope").onclick=function(){
     this.style.display="none";
     document.getElementById("main").style.display="block";
 
-    document.getElementById("music").play();
+    playMusic();
 
     calcDays();
     startStory();
     hearts();
 }
 
-/* 恋爱天数 */
+/* ❤️ 恋爱天数 */
 function calcDays(){
-    let start=new Date("2025-11-21"); // 改这里
+    let start=new Date("2025-11-21"); // 改你的日期
     let now=new Date();
     let days=Math.floor((now-start)/(1000*60*60*24));
+
     document.getElementById("days").innerHTML=
     "❤️ 我们已经在一起 "+days+" 天 ❤️";
 }
 
-/* 回忆 */
+/* 📸 回忆 */
 const memories=[
 {img:"1.jpg", text:"第一次见到你，我就觉得你很特别"},
-{img:"2.jpg", text:"后来慢慢熟悉，你的笑成了我最喜欢的画面"},
-{img:"3.jpg", text:"从此日历上普通的日子，悄悄的变成了花期"},
-{img:"4.jpg", text:"你走进我的生活，成为我不可缺少的一部分"},
-{img:"5.jpg", text:"罗娜 ❤️ 520快乐，未来的路和你一起走"}
+{img:"2.jpg", text:"慢慢熟悉之后，你的笑成了我的日常快乐"},
+{img:"3.jpg", text:"从那以后，普通的日子也变得闪闪发光"},
+{img:"4.jpg", text:"你走进我的世界，成了我最重要的人"},
+{img:"5.jpg", text:"罗娜 ❤️ 520快乐，未来的路我会一直陪着你"}
 ];
 
 let i=0;
@@ -144,11 +165,12 @@ function showMemory(){
     }
 }
 
-/* 打字 */
+/* ✨ 打字 */
 function typeText(text){
     let box=document.getElementById("story");
     box.innerHTML="";
     let j=0;
+
     let timer=setInterval(()=>{
         box.innerHTML+=text[j];
         j++;
@@ -156,7 +178,7 @@ function typeText(text){
     },50);
 }
 
-/* 爱心 */
+/* 💖 漂浮爱心 */
 function hearts(){
     setInterval(()=>{
         let h=document.createElement("div");
@@ -209,9 +231,9 @@ function animate(){
 }
 animate();
 
-/* 微信自动播放 */
+/* ✅ 微信自动播放 */
 document.addEventListener("WeixinJSBridgeReady", function () {
-    document.getElementById("music").play();
+    playMusic();
 });
 
 </script>
