@@ -3,18 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>罗豪 ❤️ 罗娜</title>
+<title> ❤️ 罗娜</title>
 
 <style>
-body {
+body{
     margin:0;
     overflow:hidden;
     background:linear-gradient(135deg,#ff6b81,#ff9ff3,#c44569);
-    font-family:"微软雅黑";
     color:#fff;
+    font-family:"微软雅黑";
     text-align:center;
 }
 
+/* 信封 */
 #envelope{
     position:absolute;
     top:40%;
@@ -27,30 +28,41 @@ body {
     animation:pulse 1.5s infinite;
 }
 @keyframes pulse{
-    0%{transform:translate(-50%,-50%) scale(1);}
     50%{transform:translate(-50%,-50%) scale(1.1);}
-    100%{transform:translate(-50%,-50%) scale(1);}
 }
 
-#main{display:none;margin-top:15vh;}
+/* 主内容 */
+#main{
+    display:none;
+    margin-top:5vh;
+}
 
+/* 名字 */
 .names{
-    font-size:30px;
-    animation:glow 2s infinite alternate;
-}
-@keyframes glow{
-    from{text-shadow:0 0 10px #fff;}
-    to{text-shadow:0 0 30px #ff4d6d;}
+    font-size:28px;
+    margin-bottom:10px;
 }
 
-#days{margin-top:10px;}
+/* 地图 */
+#map{
+    margin:10px;
+    font-size:16px;
+}
 
+/* 图片 */
 img{
-    width:220px;
+    width:240px;
     border-radius:15px;
-    margin-top:15px;
+    margin-top:10px;
 }
 
+/* 回忆文字 */
+#story{
+    margin:10px 30px;
+    font-size:16px;
+}
+
+/* 爱心漂浮 */
 .heart{
     position:absolute;
     color:red;
@@ -65,71 +77,87 @@ img{
 
 <body>
 
-<div id="envelope">💌 罗娜，点我有惊喜</div>
+<div id="envelope">💌 罗娜，点一下看看❤️</div>
 
 <div id="main">
     <div class="names">罗豪 ❤️ 罗娜</div>
     <div id="days"></div>
-    <div id="text"></div>
-    <img id="photo" src="">
+
+    <canvas id="heartCanvas"></canvas>
+
+    <div id="map">
+        📍 吃串串（开启） ➝ 干烧烤（11.21第一次吻你） ➝ 都江堰（第一次出去耍） ➝ 未来的路陪着你 ❤️
+    </div>
+
+    <img id="photo">
+    <div id="story"></div>
 </div>
 
 <audio id="music" loop>
-    <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mp3">
+    https://www.w3schools.com/html/horse.mp3
 </audio>
 
 <script>
 
-/* 💌 打开信封 */
-document.getElementById("envelope").onclick = function(){
+/* 打开 */
+document.getElementById("envelope").onclick=function(){
     this.style.display="none";
     document.getElementById("main").style.display="block";
+
     document.getElementById("music").play();
-    typing();
-    createHearts();
-    startPhotos();
+
     calcDays();
+    startStory();
+    hearts();
 }
 
-/* ❤️ 恋爱天数（自己改开始日期） */
+/* 恋爱天数 */
 function calcDays(){
-    let start = new Date("2025-11-21");  // ⚠️ 改成你们在一起日期
-    let now = new Date();
-    let diff = now - start;
-    let days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    document.getElementById("days").innerHTML =
-        "❤️ 我们已经在一起 " + days + " 天 ❤️";
+    let start=new Date("2025-11-21"); // 改这里
+    let now=new Date();
+    let days=Math.floor((now-start)/(1000*60*60*24));
+    document.getElementById("days").innerHTML=
+    "❤️ 我们已经在一起 "+days+" 天 ❤️";
 }
 
-/* ✨ 打字表白 */
-const msg = "罗娜 ❤️ 520节日快乐！遇见你，我日历上普通的日子，就悄悄变成了花期。即见君子，云胡不喜。剩下的日子我陪你一起走";
+/* 回忆 */
+const memories=[
+{img:"1.jpg", text:"第一次见到你，我就觉得你很特别"},
+{img:"2.jpg", text:"后来慢慢熟悉，你的笑成了我最喜欢的画面"},
+{img:"3.jpg", text:"从此日历上普通的日子，悄悄的变成了花期"},
+{img:"4.jpg", text:"你走进我的生活，成为我不可缺少的一部分"},
+{img:"5.jpg", text:"罗娜 ❤️ 520快乐，未来的路和你一起走"}
+];
+
 let i=0;
-function typing(){
-    if(i<msg.length){
-        document.getElementById("text").innerHTML+=msg[i];
+
+function startStory(){
+    showMemory();
+}
+
+function showMemory(){
+    if(i<memories.length){
+        document.getElementById("photo").src=memories[i].img;
+        typeText(memories[i].text);
         i++;
-        setTimeout(typing,80);
+        setTimeout(showMemory,4000);
     }
 }
 
-/* 📸 照片轮播（换成你的照片） */
-const photos = [
-    "https://picsum.photos/300?1",
-    "https://picsum.photos/300?2",
-    "https://picsum.photos/300?3"
-];
-
-let index=0;
-function startPhotos(){
-    document.getElementById("photo").src=photos[0];
-    setInterval(()=>{
-        index=(index+1)%photos.length;
-        document.getElementById("photo").src=photos[index];
-    },2000);
+/* 打字 */
+function typeText(text){
+    let box=document.getElementById("story");
+    box.innerHTML="";
+    let j=0;
+    let timer=setInterval(()=>{
+        box.innerHTML+=text[j];
+        j++;
+        if(j>=text.length) clearInterval(timer);
+    },50);
 }
 
-/* 💖 爱心 */
-function createHearts(){
+/* 爱心 */
+function hearts(){
     setInterval(()=>{
         let h=document.createElement("div");
         h.className="heart";
@@ -141,10 +169,51 @@ function createHearts(){
     },300);
 }
 
+/* ❤️ 爱心拼名字 */
+const canvas=document.getElementById("heartCanvas");
+const ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=150;
+
+let particles=[];
+for(let i=0;i<300;i++){
+    particles.push({
+        x:Math.random()*canvas.width,
+        y:Math.random()*canvas.height
+    });
+}
+
+function drawText(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle="red";
+    ctx.font="30px 微软雅黑";
+    ctx.textAlign="center";
+    ctx.fillText("罗豪 ❤️ 罗娜",canvas.width/2,80);
+}
+
+function animate(){
+    drawText();
+    let data=ctx.getImageData(0,0,canvas.width,canvas.height);
+
+    particles.forEach(p=>{
+        let index=(Math.floor(p.y)*canvas.width+Math.floor(p.x))*4;
+        if(data.data[index+3]>128){
+            ctx.fillStyle="red";
+            ctx.beginPath();
+            ctx.arc(p.x,p.y,2,0,2*Math.PI);
+            ctx.fill();
+        }
+    });
+
+    requestAnimationFrame(animate);
+}
+animate();
+
 /* 微信自动播放 */
 document.addEventListener("WeixinJSBridgeReady", function () {
     document.getElementById("music").play();
 });
+
 </script>
 
 </body>
